@@ -1,0 +1,90 @@
+<!--<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"-->
+<!--             xmlns="http://www.springframework.org/schema/security"-->
+<!--             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--             xmlns:context="http://www.springframework.org/schema/context"-->
+<!--             xsi:schemaLocation="http://www.springframework.org/schema/beans-->
+<!--            http://www.springframework.org/schema/beans/spring-beans-4.2.xsd-->
+<!--            http://www.springframework.org/schema/security-->
+<!--            http://www.springframework.org/schema/security/spring-security-4.2.xsd-->
+<!--            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">-->
+
+<!--    <global-method-security secured-annotations="enabled"/>-->
+
+<!--    <http pattern="/favicon.ico" security="none" />-->
+
+<!--    <http>-->
+<!--        <form-login login-page='/login-form'-->
+<!--                    default-target-url="/home"-->
+<!--                    authentication-failure-url="/login-form?error=true" />-->
+<!--        <logout logout-url="/perform-logout"-->
+<!--                logout-success-url="/login-form"-->
+<!--                delete-cookies="JSESSIONID" />-->
+<!--        <http-basic/>-->
+<!--        <csrf disabled="true"/>-->
+<!--        <intercept-url pattern="/login-form" access="isAnonymous()" />-->
+<!--        <intercept-url pattern="/**" access="hasRole('ROLE_WRITER') or hasRole('ROLE_READER')"/>-->
+<!--        <intercept-url pattern="/**" access="isAuthenticated()"/>-->
+<!--    </http>-->
+
+
+<!--    <user-service id="userService">-->
+<!--        <user name="mike" password="{noop}1111" authorities="ROLE_WRITER"/>-->
+<!--        <user name="nick" password="{noop}2222" authorities="ROLE_READER"/>-->
+<!--    </user-service>-->
+<!--    <authentication-manager>-->
+<!--        <authentication-provider user-service-ref="userService" />-->
+<!--    </authentication-manager>-->
+
+<!--    <user-service id="userService" properties="classpath:users.properties" />-->
+
+<!--    <beans:bean id="userDetailsService" class="com.softserve.academy.repository.UserRepository"/>-->
+
+<!--    <beans:bean id="authenticationProvider" class="com.softserve.academy.conficuration.WebAuthenticationProvider">-->
+<!--        <beans:property name="userDetailsService" ref="userDetailsService"/>-->
+<!--    </beans:bean>-->
+
+<!--    <authentication-manager>-->
+<!--        <authentication-provider ref="authenticationProvider"/>-->
+<!--    </authentication-manager>-->
+
+<!--    <beans:bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">-->
+<!--        <beans:constructor-arg value="4"/>-->
+<!--    </beans:bean>-->
+<!--    <user-service id="userService">-->
+<!--        <user name="mike" password="$2a$04$nz8PgIfBGquPB32qZPrU5.F3Rg7JXX5evqehHCJtUsBfg3wgh0KJi" authorities="ROLE_WRITER"/>-->
+<!--    </user-service>-->
+<!--    <authentication-manager>-->
+<!--        <authentication-provider user-service-ref="userService">-->
+<!--            <password-encoder ref="bCryptPasswordEncoder" />-->
+<!--        </authentication-provider>-->
+<!--    </authentication-manager>-->
+
+
+<!--    <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+<!--        <beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>-->
+<!--        <beans:property name="url" value="jdbc:mysql://localhost:3306/spring-security-db"/>-->
+<!--        <beans:property name="username" value="root"/>-->
+<!--        <beans:property name="password" value="1111"/>-->
+<!--    </beans:bean>-->
+<!--    <authentication-manager>-->
+<!--        <authentication-provider>-->
+<!--            <jdbc-user-service data-source-ref="dataSource"/>-->
+<!--        </authentication-provider>-->
+<!--    </authentication-manager>-->
+
+
+<!--    <beans:bean id="jdbcDaoImpl" class="com.softserve.academy.repository.UserRepository"/>-->
+<!--    <beans:bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">-->
+<!--        <beans:property name="userDetailsService" ref="jdbcDaoImpl"/>-->
+<!--        <beans:property name="passwordEncoder" ref="passwordEncoder"/>-->
+<!--    </beans:bean>-->
+<!--    <beans:bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">-->
+<!--        <beans:constructor-arg>-->
+<!--            <beans:list>-->
+<!--                <beans:ref bean="daoAuthenticationProvider"/>-->
+<!--            </beans:list>-->
+<!--        </beans:constructor-arg>-->
+<!--    </beans:bean>-->
+
+
+<!--</beans:beans>-->
