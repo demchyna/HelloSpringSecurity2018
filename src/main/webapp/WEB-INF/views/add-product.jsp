@@ -24,6 +24,16 @@
                     <td><sf:input path="quantity" /></td>
                 </tr>
                 <tr>
+                    <td><label for="store">Stores:</label></td>
+                    <td>
+                        <sf:select path="store">
+                            <c:forEach items="${stores}" var="store">
+                                <sf:option value="${store.id}" label="${store.name}"/>
+                            </c:forEach>
+                        </sf:select>
+                    </td>
+                </tr>
+                <tr>
                     <td><input type="submit" value="Submit" /></td>
                     <td style="text-align: right"><input type="reset" value="Reset" /></td>
                 </tr>

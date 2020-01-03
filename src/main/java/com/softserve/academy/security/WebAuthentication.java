@@ -1,40 +1,38 @@
-package com.softserve.academy.conficuration;
+package com.softserve.academy.security;
 
-import com.softserve.academy.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 public class WebAuthentication implements Authentication {
 
-    private String principal;
-    private String credentials;
+    private UserDetails userDetails;
     private boolean isAuthenticated;
 
-    public WebAuthentication(String principal, String credentials) {
-        this.principal = principal;
-        this.credentials = credentials;
+    public WebAuthentication(UserDetails userDetails) {
+        this.userDetails = userDetails;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return userDetails.getAuthorities();
     }
 
     @Override
     public Object getCredentials() {
-        return credentials;
+        return userDetails.getPassword();
     }
 
     @Override
     public Object getDetails() {
-        return null;
+        return userDetails;
     }
 
     @Override
     public Object getPrincipal() {
-        return principal;
+        return userDetails.getUsername();
     }
 
     @Override
@@ -49,6 +47,18 @@ public class WebAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return principal;
+        return userDetails.getUsername();
+    }
+
+    public UserDetails getUserDetails() {
+        return userDetails;
+    }
+
+    @Override
+    public String toString() {
+        return "WebAuthentication{" +
+                "user=" + userDetails +
+                ", isAuthenticated=" + isAuthenticated +
+                '}';
     }
 }

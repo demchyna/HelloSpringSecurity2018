@@ -1,25 +1,30 @@
 package com.softserve.academy.conficuration;
 
+import com.softserve.academy.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity()
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     private WebAuthenticationFilter webAuthenticationFilter;
-    private WebAuthenticationManager webAuthenticationManager;
-    private WebAccessDeniedHandler webAccessDeniedHandler;
-    private WebAuthenticationEntryPoint webAuthenticationEntryPoint;
+    private WebApiAuthenticationFilter webApiAuthenticationFilter;
 
+    private WebAuthenticationEntryPoint webAuthenticationEntryPoint;
+    private WebAccessDeniedHandler webAccessDeniedHandler;
 
     @Autowired
     public void setWebAuthenticationFilter(WebAuthenticationFilter webAuthenticationFilter) {
@@ -27,8 +32,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void setWebAuthenticationManager(WebAuthenticationManager webAuthenticationManager) {
-        this.webAuthenticationManager = webAuthenticationManager;
+    public void setWebApiAuthenticationFilter(WebApiAuthenticationFilter webApiAuthenticationFilter) {
+        this.webApiAuthenticationFilter = webApiAuthenticationFilter;
     }
 
     @Autowired
@@ -41,62 +46,38 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         this.webAuthenticationEntryPoint = webAuthenticationEntryPoint;
     }
 
-    @Bean
-    public WebAuthenticationFilter getWebAuthenticationFilter() {
-        WebAuthenticationFilter webAuthenticationFilter = new WebAuthenticationFilter();
-        webAuthenticationFilter.setAuthenticationManager(webAuthenticationManager);
-        return webAuthenticationFilter;
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/login").permitAll()
                 .anyRequest().authenticated();
+//        http.cors().and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.httpBasic().disable()
                 .formLogin().disable()
                 .rememberMe().disable()
                 .csrf().disable();
-        http.addFilterBefore(webAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        //http.exceptionHandling().accessDeniedHandler(webAccessDeniedHandler);
+        http.addFilterBefore(webAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(webApiAuthenticationFilter, BasicAuthenticationFilter.class);
+
         http.exceptionHandling().authenticationEntryPoint(webAuthenticationEntryPoint);
+        //http.exceptionHandling().accessDeniedHandler(webAccessDeniedHandler);
     }
+
+    @Bean
+    @Autowired
+    public WebApiAuthenticationFilter getWebApiAuthenticationFilter(WebApiAuthenticationManager webApiAuthenticationManager) {
+        WebApiAuthenticationFilter webApiAuthenticationFilter = new WebApiAuthenticationFilter("/api/**");
+        webApiAuthenticationFilter.setAuthenticationManager(webApiAuthenticationManager);
+        return webApiAuthenticationFilter;
+    }
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                //.antMatchers(HttpMethod.POST, "/login").permitAll()
-//                .anyRequest().authenticated()
-//                    .and()
-//                .formLogin()
-//                .loginPage("/login-form")
-//                .loginProcessingUrl("/login")
-//                .defaultSuccessUrl("/home")
-//                .failureUrl("/login-form?error=true")
-//                .permitAll()
-//                    .and()
-//                .logout()
-//                .logoutUrl("/perform-logout")
-//                .logoutSuccessUrl("/login-form")
-//                .deleteCookies("JSESSIONID")
-//                    .and()
-//                .httpBasic()
-//                    .and().csrf().disable();
-//        http.addFilterBefore(webAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//    }
-
-
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth, AuthenticationProvider authenticationProvider) throws Exception {
-//        auth.authenticationProvider(authenticationProvider);
-//    }
-
 
 //    @Bean
 //    public DataSource dataSource() {
@@ -107,24 +88,5 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 //        dataSource.setPassword("1111");
 //        return dataSource;
 //    }
-//
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth, UserDetailsService userDetailsService) throws Exception {
-//        auth.userDetailsService(userDetailsService);
-//    }
-
-
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//
-//        auth.userDetailsService(userDetailsService);
-//
-//        auth.inMemoryAuthentication().withUser("mike").password("{noop}1111").roles("WRITER");
-//        auth.inMemoryAuthentication().withUser("nick").password("{noop}2222").roles("READER");
-//    }
-
 
 }

@@ -17,7 +17,7 @@ public class ProductRepository {
             products.add(product);
     }
 
-    public Product readById(final int id) {
+    public Product readById(final long id) {
         return products.stream()
                 .filter(p -> p.getId() == id)
                 .findAny().orElse(null);
@@ -35,7 +35,7 @@ public class ProductRepository {
         }
     }
 
-    public void delete(int id) {
+    public void delete(long id) {
         products.stream()
                 .filter(p -> p.getId() == id).findAny()
                 .ifPresent(p -> products.remove(p));

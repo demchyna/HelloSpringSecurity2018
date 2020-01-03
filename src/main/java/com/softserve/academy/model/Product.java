@@ -1,5 +1,7 @@
 package com.softserve.academy.model;
 
+import com.softserve.academy.repository.StoreRepository;
+
 import java.io.Serializable;
 
 public class Product implements Serializable {
@@ -7,14 +9,16 @@ public class Product implements Serializable {
     private String name;
     private double price;
     private int quantity;
+    private Store store;
 
     public Product() {
     }
 
-    public Product(String name, double price, int quantity) {
+    public Product(String name, double price, int quantity, Store store) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.store = store;
     }
 
     public long getId() {
@@ -49,6 +53,15 @@ public class Product implements Serializable {
         this.quantity = quantity;
     }
 
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(long id) {
+        StoreRepository storeRepository = new StoreRepository();
+        this.store = storeRepository.readById(id);
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -56,6 +69,7 @@ public class Product implements Serializable {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity +
+                ", store=" + store +
                 '}';
     }
 }

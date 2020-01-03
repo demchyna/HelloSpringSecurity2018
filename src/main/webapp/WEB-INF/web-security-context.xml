@@ -39,7 +39,7 @@
 
 <!--    <beans:bean id="userDetailsService" class="com.softserve.academy.repository.UserRepository"/>-->
 
-<!--    <beans:bean id="authenticationProvider" class="com.softserve.academy.conficuration.WebAuthenticationProvider">-->
+<!--    <beans:bean id="authenticationProvider" class="com.softserve.academy.security.WebAuthenticationProvider">-->
 <!--        <beans:property name="userDetailsService" ref="userDetailsService"/>-->
 <!--    </beans:bean>-->
 

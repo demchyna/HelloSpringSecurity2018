@@ -1,4 +1,4 @@
-package com.softserve.academy.conficuration;
+package com.softserve.academy.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

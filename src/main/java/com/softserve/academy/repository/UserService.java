@@ -11,10 +11,11 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class UserServiceSecond implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     private List<User> users = Arrays.asList(
-            new User(2, "nick", "$2a$10$vqkG1Lonp75WyLwQi3RAA.MJ8ElQXEHCFa5FmPUPwnXrc1JOEJB7m", Arrays.asList(new Role("READER")))
+            new User(1, "mike", "$2a$10$6U/5JW/Mj9AB20f8zAm3vOpTxCP/ShrEYYcl7v7OrWA4ZwCLR2H7u", Arrays.asList(new Role("ROLE_ADMIN"))),
+            new User(2, "nick", "$2a$10$vqkG1Lonp75WyLwQi3RAA.MJ8ElQXEHCFa5FmPUPwnXrc1JOEJB7m", Arrays.asList(new Role("ROLE_USER")))
     );
 
     public User readById(final int id) {

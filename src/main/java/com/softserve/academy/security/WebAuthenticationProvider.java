@@ -1,7 +1,7 @@
-package com.softserve.academy.conficuration;
+package com.softserve.academy.security;
 
-import com.softserve.academy.BadCredentialsException;
-import com.softserve.academy.repository.UserServiceFirst;
+import com.softserve.academy.model.User;
+import com.softserve.academy.repository.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,13 +12,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WebAuthenticationFirstProvider implements AuthenticationProvider {
+public class WebAuthenticationProvider implements AuthenticationProvider {
 
-    private UserServiceFirst userDetailsService;
+    private UserService userDetailsService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public WebAuthenticationFirstProvider(UserServiceFirst userDetailsService, PasswordEncoder passwordEncoder) {
+    public WebAuthenticationProvider(UserService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -40,10 +40,16 @@ public class WebAuthenticationFirstProvider implements AuthenticationProvider {
         }
 
         if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
-            return new UsernamePasswordAuthenticationToken(
-                    userDetails.getUsername(),
-                    userDetails.getPassword(),
-                    userDetails.getAuthorities());
+//            return new UsernamePasswordAuthenticationToken(
+//                    userDetails.getUsername(),
+//                    userDetails.getPassword(),
+//                    userDetails.getAuthorities());
+
+            Authentication webAuthentication = new WebAuthentication(userDetails);
+            webAuthentication.setAuthenticated(true);
+
+            return webAuthentication;
+
         } else {
             return null;
         }
